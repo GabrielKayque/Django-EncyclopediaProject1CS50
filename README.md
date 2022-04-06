@@ -1,0 +1,1 @@
+# Django-EncyclopediaProject1CS50
