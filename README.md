@@ -2,7 +2,7 @@
 
 <div>
     
-    <h3>Django-EncyclopediaProject1CS50</h3>
+    Django-EncyclopediaProject1CS50
 
 
     <ul>
