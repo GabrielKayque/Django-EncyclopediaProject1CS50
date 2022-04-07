@@ -36,4 +36,5 @@ Django-Encyclopedia - Project1 from CS50’s Web Programming with Python and Jav
     <ul>
         Markdown to HTML Conversion: On each entry’s page, any Markdown content in the entry file should be converted to HTML before being displayed to the user.
     </ul>
+    Base files: https://cdn.cs50.net/web/2020/spring/projects/1/wiki.zip
 </div>
