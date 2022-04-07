@@ -1,3 +1,4 @@
+<html>
 <div>
     <h1>Design a Wikipedia-like online encyclopedia.</h1>
     <h3>Django-EncyclopediaProject1CS50</h3>
@@ -38,3 +39,4 @@
         Markdown to HTML Conversion: On each entry’s page, any Markdown content in the entry file should be converted to HTML before being displayed to the user. 
     </ul>
 </div>
+</html>
