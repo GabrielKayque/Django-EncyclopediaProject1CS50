@@ -1,0 +1,6 @@
+*.log
+*.pot
+*.pyc
+encyclopedia/__pycache__/
+wiki/__pycache__/
+*/__pycache__/
