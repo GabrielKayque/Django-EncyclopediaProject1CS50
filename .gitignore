@@ -4,4 +4,3 @@
 encyclopedia/__pycache__/
 wiki/__pycache__/
 */__pycache__/
-wiki/settings.py
