@@ -1,18 +1,25 @@
 from django import forms
-from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
 import markdown
-from markdown.core import Markdown
 from . import util
 from django.urls import reverse
 from .forms import EditForm
 from random import randrange
 
-
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
+  
+    
+def title(request, title=None):
+    if util.get_entry(title) != None:
+        content = markdown.markdown(util.get_entry(title))
+        return render(request, "encyclopedia/title.html", {
+            "title" : title, "content": content 
+        })
+    
+    return redirect(reverse("notfound"))
 
 
 def editPage(request, title):
@@ -55,20 +62,6 @@ def createPage(request):
         "h1": "Create New Page",
         "form": EditForm(),
     })
-  
-    
-def title(request, title=None):
-    if util.get_entry(title) != None:
-        content = markdown.markdown(util.get_entry(title))
-        return render(request, "encyclopedia/title.html", {
-            "title" : title, "content": content 
-        })
-    
-    return redirect(reverse("notfound"))
-
-
-def notfound(request):
-    return render(request, "encyclopedia/notfound.html")
 
 
 def search(request):
@@ -95,6 +88,10 @@ def randomPage(request):
     title = list[i]
     print(i,title)
     return redirect(reverse("title", args={title}))
+
+
+def notfound(request):
+    return render(request, "encyclopedia/notfound.html")
     
     
 
