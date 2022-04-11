@@ -1,25 +1,25 @@
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 import markdown
 from . import util
 from django.urls import reverse
 
 
 def index(request):
-    print(util.list_entries())
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
 
     
-    
-def title(request, title=None):
+def title(request, title=None, clear=None):
+    print(clear)
     if util.get_entry(title) != None:
         content = markdown.markdown(util.get_entry(title))
         return render(request, "encyclopedia/title.html", {
             "title" : title, "content": content 
         })
-    return HttpResponseRedirect(reverse("notfound"))
+    else:
+        return HttpResponseRedirect(reverse("notfound"))
 
 
 def notfound(request):
@@ -28,24 +28,25 @@ def notfound(request):
 
 def search(request):
     query = request.GET.get("q")
-    if util.get_entry(query) != None:
-        content = markdown.markdown(util.get_entry(query))
-        return render(request, "encyclopedia/title.html", {
-            "title" : query.capitalize, "content": content 
+    if util.get_entry(query) is not None:
+        return redirect(reverse("title", args={query}))
+    
+    entries = util.list_entries()
+    matchs = []
+    for entry in entries:
+        if query.upper() in entry.upper() or entry.upper() in query.upper():
+            matchs.append(entry)
+    if matchs:
+        return render(request, "encyclopedia/search.html", {
+            "entries": matchs, "query": query
         })
         
-    entries = util.list_entries()
-    matchs = []    
-    for entry in entries:
-        if query.upper() in entry.upper():
-            matchs.append(entry)
-            print(f"entrada {entry}, lista atual: {matchs}")
-    if matchs != []:
-        return render(request, "encyclopedia/search.html", {
-        "entries": matchs, "query": query
-    })
+    return redirect(reverse("notfound"))    
     
-    return HttpResponseRedirect(reverse("notfound"))      
+
+    
+        
+
     
         
         
