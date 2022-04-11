@@ -1,8 +1,31 @@
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
 import markdown
+from markdown.core import Markdown
 from . import util
 from django.urls import reverse
+from .forms import EditForm
+
+def editPage(request, title=None):
+    if request.method== "POST":
+        print('1')
+        form = EditForm(request.POST)
+        if form.is_valid():
+            print("2")
+            title = form.cleaned_data["title"]
+            content = form.cleaned_data["content"]
+            if util.get_entry(title) is None:
+                util.save_entry(title, content)
+                return redirect(reverse("title", args={title}))
+            
+    
+    
+    return render(request,"encyclopedia/editpage.html", {
+       "title": 'Create New Page',
+        "edit": False,
+        "form": EditForm(),
+        "new" : 'new',
+     })
 
 
 def index(request):
@@ -11,15 +34,14 @@ def index(request):
     })
 
     
-def title(request, title=None, clear=None):
-    print(clear)
+def title(request, title=None):
     if util.get_entry(title) != None:
         content = markdown.markdown(util.get_entry(title))
         return render(request, "encyclopedia/title.html", {
             "title" : title, "content": content 
         })
     else:
-        return HttpResponseRedirect(reverse("notfound"))
+        return redirect(reverse("notfound"))
 
 
 def notfound(request):
