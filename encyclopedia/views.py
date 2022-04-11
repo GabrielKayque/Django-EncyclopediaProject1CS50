@@ -6,6 +6,14 @@ from markdown.core import Markdown
 from . import util
 from django.urls import reverse
 from .forms import EditForm
+from random import randrange
+
+
+def index(request):
+    return render(request, "encyclopedia/index.html", {
+        "entries": util.list_entries()
+    })
+
 
 def editPage(request, title):
     if request.method=="POST":
@@ -15,7 +23,6 @@ def editPage(request, title):
             content = form.cleaned_data["content"]
             util.save_entry(title,content)
             return redirect(reverse("title", args={title}))
-            
     
     content = util.get_entry(title)
     form = EditForm()
@@ -25,16 +32,8 @@ def editPage(request, title):
     return render(request, "encyclopedia/editpage.html",{
         "title": title,
         "form": form,
-        
-                
     })
-    
 
-
-def index(request):
-    return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
-    })
 
 def createPage(request):
     if request.method == "POST":
@@ -45,17 +44,18 @@ def createPage(request):
             if util.get_entry(title) is None:
                 util.save_entry(title, content)
                 return redirect(reverse("title", args={title}))
-            else:
-                return render(request, "encyclopedia/createpage.html", {
-                    "h1": "Create New Page",
-                    "form": form,
-                    "error": "This Title Alredy Exists!!"
-                
-                 })
+            
+            return render(request, "encyclopedia/createpage.html", {
+                "h1": "Create New Page",
+                "form": form,
+                "error": "This Title Alredy Exists!!"
+            })
+            
     return render(request,"encyclopedia/createpage.html", {
         "h1": "Create New Page",
         "form": EditForm(),
-     })
+    })
+  
     
 def title(request, title=None):
     if util.get_entry(title) != None:
@@ -63,8 +63,8 @@ def title(request, title=None):
         return render(request, "encyclopedia/title.html", {
             "title" : title, "content": content 
         })
-    else:
-        return redirect(reverse("notfound"))
+    
+    return redirect(reverse("notfound"))
 
 
 def notfound(request):
@@ -86,7 +86,16 @@ def search(request):
             "entries": matchs, "query": query
         })
         
-    return redirect(reverse("notfound"))    
+    return redirect(reverse("notfound"))
+
+
+def randomPage(request):
+    list = util.list_entries()
+    i = randrange(0, len(list))
+    title = list[i]
+    print(i,title)
+    return redirect(reverse("title", args={title}))
+    
     
 
     
