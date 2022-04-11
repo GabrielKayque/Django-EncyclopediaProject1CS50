@@ -1,3 +1,4 @@
+from django import forms
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
 import markdown
@@ -6,9 +7,37 @@ from . import util
 from django.urls import reverse
 from .forms import EditForm
 
-def editPage(request, title=None):
+def editPage(request, title):
+    if request.method=="POST":
+        form = EditForm(request.POST)
+        
+        if form.is_valid():
+            content = form.cleaned_data["content"]
+            util.save_entry(title,content)
+            return redirect(reverse("title", args={title}))
+            
     
-    if request.method== "POST":
+    content = util.get_entry(title)
+    form = EditForm()
+    form.fields['title'].widget=forms.HiddenInput()
+    form.fields['content'].initial=content
+    form.fields['title'].initial=title
+    return render(request, "encyclopedia/editpage.html",{
+        "title": title,
+        "form": form,
+        
+                
+    })
+    
+
+
+def index(request):
+    return render(request, "encyclopedia/index.html", {
+        "entries": util.list_entries()
+    })
+
+def createPage(request):
+    if request.method == "POST":
         form = EditForm(request.POST)
         if form.is_valid():
             title = form.cleaned_data["title"]
@@ -17,26 +46,16 @@ def editPage(request, title=None):
                 util.save_entry(title, content)
                 return redirect(reverse("title", args={title}))
             else:
-                return render(request, "encyclopedia/editpage.html", {
+                return render(request, "encyclopedia/createpage.html", {
                     "h1": "Create New Page",
                     "form": form,
-                    "new" : 'new',
                     "error": "This Title Alredy Exists!!"
                 
                  })
-    return render(request,"encyclopedia/editpage.html", {
-        "h1": 'Create New Page',
-        "edit": False,
+    return render(request,"encyclopedia/createpage.html", {
+        "h1": "Create New Page",
         "form": EditForm(),
-        "new" : 'new',
      })
-
-
-def index(request):
-    return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
-    })
-
     
 def title(request, title=None):
     if util.get_entry(title) != None:

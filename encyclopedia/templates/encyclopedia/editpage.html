@@ -1,19 +1,21 @@
 {% extends "encyclopedia/layout.html" %}
 
 
-{% block title %} {{ h1 }}{% endblock title %}
+{% block title %} {{ title }} - Edit Page{% endblock title %}
 
+
+
+{% block nav %}
+    <a href="{% url 'title' title %}">Return</a>
+{% endblock nav %}
+    
 
 {% block body %}
 
-<h1>{{h1}}</h1>
+<h1>Edit '{{title}}' Content</h1>
 
-{% if error %}
-    <p class="error">{{ error }}</p>
-{% endif %}
-
-<form method="post" action="{% url 'editpage' new %}">
-    <input type="submit" value="SAVE PAGE"><br>
+<form method="post" action="{% url 'editpage' title %}">
+    <input type="submit" value="Save Edit"><br>
     {% csrf_token %}
     {{ form.as_p }} 
 </form>

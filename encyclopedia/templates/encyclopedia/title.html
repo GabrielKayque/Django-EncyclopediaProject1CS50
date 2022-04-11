@@ -4,6 +4,11 @@
 {% block title %}{{ title.capitalize }} - Encyclopedia{% endblock title %}
 
 
+{% block nav %}
+    <a href="{% url 'editpage' title %}">Edit This Page</a>
+{% endblock nav %}
+    
+
 {% block body %}
     <p>{{ content |safe}}</p>
 {% endblock body %}

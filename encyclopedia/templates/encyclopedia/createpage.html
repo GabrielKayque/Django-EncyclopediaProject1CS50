@@ -1,0 +1,21 @@
+{% extends "encyclopedia/layout.html" %}
+
+
+{% block title %} {{ h1 }}{% endblock title %}
+
+
+{% block body %}
+
+<h1>{{h1}}</h1>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+<form method="post" action="{% url 'createpage'%}">
+    <input type="submit" value="SAVE PAGE"><br>
+    {% csrf_token %}
+    {{ form.as_p }} 
+</form>
+
+{% endblock body %} 
