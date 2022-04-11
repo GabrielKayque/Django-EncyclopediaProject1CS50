@@ -7,21 +7,25 @@ from django.urls import reverse
 from .forms import EditForm
 
 def editPage(request, title=None):
+    
     if request.method== "POST":
-        print('1')
         form = EditForm(request.POST)
         if form.is_valid():
-            print("2")
             title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
             if util.get_entry(title) is None:
                 util.save_entry(title, content)
                 return redirect(reverse("title", args={title}))
-            
-    
-    
+            else:
+                return render(request, "encyclopedia/editpage.html", {
+                    "h1": "Create New Page",
+                    "form": form,
+                    "new" : 'new',
+                    "error": "This Title Alredy Exists!!"
+                
+                 })
     return render(request,"encyclopedia/editpage.html", {
-       "title": 'Create New Page',
+        "h1": 'Create New Page',
         "edit": False,
         "form": EditForm(),
         "new" : 'new',
