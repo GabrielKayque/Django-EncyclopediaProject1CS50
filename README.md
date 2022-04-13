@@ -1,4 +1,4 @@
-# Design a Wikipedia-like online encyclopedia.
+# Design a Wikipedia-like online Encyclopedia.
 Django-Encyclopedia - Project1 from CS50’s Web Programming with Python and JavaScript
 
 <div>
