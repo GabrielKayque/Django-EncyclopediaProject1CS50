@@ -93,16 +93,3 @@ def randomPage(request):
 def notfound(request):
     return render(request, "encyclopedia/notfound.html")
     
-    
-
-    
-        
-
-    
-        
-        
-        
-        
-        
-    
-
